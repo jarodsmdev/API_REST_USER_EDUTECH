@@ -1,7 +1,24 @@
 package com.briones.users.management.exception;
 
 public class DuplicateKeyException extends RuntimeException{
+    private String field;
+    private String value;
+
     public DuplicateKeyException(String message) {
         super(message);
+    }
+
+    public DuplicateKeyException(String message, String field, String value) {
+        super(message);
+        this.field = field;
+        this.value = value;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public String getValue() {
+        return value;
     }
 }

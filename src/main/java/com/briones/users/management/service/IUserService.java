@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface IUserService {
 
     List<User> getAllUsers();
-    User saveUser(User user) throws DuplicateKeyException;
+    User saveUser(User user) throws DuplicateKeyException, UserNotFoundException;
     User getUserById(UUID uuid) throws UserNotFoundException;
     User getUserByEmail(String email) throws UserNotFoundException;
     void deleteUserById(UUID uuid) throws UserNotFoundException;
