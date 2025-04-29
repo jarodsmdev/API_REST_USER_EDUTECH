@@ -1,5 +1,6 @@
 package com.briones.users.management.controller;
 
+import com.briones.users.management.exception.UserNotFoundException;
 import com.briones.users.management.model.User;
 import com.briones.users.management.service.IUserService;
 import jakarta.validation.Valid;
@@ -26,28 +27,28 @@ public class UserController {
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<User> getUserById(@PathVariable UUID uuid) throws Exception {
+    public ResponseEntity<User> getUserById(@PathVariable UUID uuid) throws UserNotFoundException {
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .body(userService.getUserById(uuid));
     }
 
     @PostMapping
-    private ResponseEntity<User> saveUser(@Valid @RequestBody User user) throws Exception {
+    private ResponseEntity<User> saveUser(@Valid @RequestBody User user) throws UserNotFoundException {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .body(userService.saveUser(user));
     }
 
     @PutMapping
-    public ResponseEntity<User> updateUser(@Valid @RequestBody User user) throws Exception{
+    public ResponseEntity<User> updateUser(@Valid @RequestBody User user) throws UserNotFoundException{
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .body(userService.saveUser(user));
     }
 
     @DeleteMapping("/{uuid}")
-    public ResponseEntity<Void> deleteUser(@PathVariable UUID uuid) throws Exception {
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID uuid) throws UserNotFoundException {
         userService.deleteUserById(uuid);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
