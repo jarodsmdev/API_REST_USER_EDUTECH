@@ -3,6 +3,8 @@ package com.briones.users.management.controller;
 import com.briones.users.management.exception.DuplicateKeyException;
 import com.briones.users.management.exception.UserNotFoundException;
 import com.briones.users.management.model.User;
+import com.briones.users.management.model.dto.UserDto;
+import com.briones.users.management.model.dto.UserMapper;
 import com.briones.users.management.service.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +25,22 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
+    private final UserMapper userMapper = UserMapper.INSTANCE;
+
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         List<User> users = userService.getAllUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(users);
+        List<UserDto> userDtos = users.stream().map(userMapper::toDto).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(userDtos);
     }
 
     @GetMapping("/{uuid}")
-    public ResponseEntity<User> getUserById(@PathVariable UUID uuid) throws UserNotFoundException {
+    public ResponseEntity<UserDto> getUserById(@PathVariable UUID uuid) throws UserNotFoundException {
+        User user = userService.getUserById(uuid);
+        UserDto userDto = userMapper.toDto(user);
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
-                .body(userService.getUserById(uuid));
+                .body(userDto);
     }
 
     @PostMapping

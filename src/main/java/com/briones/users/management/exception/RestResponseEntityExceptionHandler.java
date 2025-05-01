@@ -37,31 +37,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
     }
 
-    // Agregar un manejador directo para DataIntegrityViolationException
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<ErrorMessage> handleDataIntegrityViolation(DataIntegrityViolationException exception) {
-        Map<String, String> errors = new HashMap<>();
-
-        String message = "Error de integridad de datos";
-        if (exception.getMessage() != null && exception.getMessage().contains("Duplicate entry")) {
-            message = "Ya existe un registro con estos datos";
-            // Intentar extraer el valor duplicado
-            String exMsg = exception.getMessage();
-            if (exMsg.contains("Duplicate entry '") && exMsg.contains("' for key")) {
-                String duplicateValue = exMsg.substring(
-                        exMsg.indexOf("Duplicate entry '") + 17,
-                        exMsg.indexOf("' for key")
-                );
-                errors.put("duplicateValue", duplicateValue);
-            }
-        }
-
-        errors.put("description", message);
-        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.CONFLICT, message, errors);
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorMessage);
-    }
-
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
                                                                 MethodArgumentNotValidException ex,
