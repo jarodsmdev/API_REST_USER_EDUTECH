@@ -42,13 +42,51 @@ Este proyecto es una API RESTful desarrollada con **Spring Boot** que permite la
    mvn spring-boot:run
    ```
 
-## Endpoints
-
 ### Base URL
 ```
-http://localhost:8080/api/v1/users
+http://localhost:8081/api/v1/users
 ```
 
+## Ejecución con Docker
+
+Este proyecto incluye un `Dockerfile` y un archivo `docker-compose.yml` para facilitar la construcción y ejecución de la aplicación en un contenedor Docker.
+
+### Requisitos previos
+
+- **Docker**: Asegúrate de tener Docker instalado en tu sistema. [Guía de instalación de Docker](https://docs.docker.com/get-docker/)
+- **Docker Compose**: Asegúrate de tener Docker Compose instalado. [Guía de instalación de Docker Compose](https://docs.docker.com/compose/install/)
+- **Archivo `.env`**: Es necesario crear un archivo `.env` en la raíz del proyecto con las siguientes variables de entorno configuradas:
+
+```dotenv
+DB_ENDPOINT=<endpoint_de_tu_base_de_datos>
+DB_PORT=<puerto_de_tu_base_de_datos>
+DB_NAME=<nombre_de_tu_base_de_datos>
+DB_USERNAME=<usuario_de_tu_base_de_datos>
+DB_PASSWORD=<contraseña_de_tu_base_de_datos>
+```
+
+### Construcción de la imagen Docker y ejecución
+
+1. Abre una terminal y navega hasta la raíz del proyecto.
+2. Ejecuta el siguiente comando para construir la imagen Docker:
+   ```bash
+   docker compose up -d --build
+   ```
+3. Una vez que la imagen se haya construido y el contenedor esté en ejecución, puedes acceder a la API en la siguiente URL:
+   ```
+   http://localhost/api/v1/users
+   ```
+4. Para detener y eliminar el contenedor, ejecuta:
+   ```bash
+    docker compose down
+    ```
+   Esto detendrá y eliminará el contenedor, pero no eliminará la imagen.
+
+### Notas importantes
+El archivo `.env` no se incluye en el repositorio por razones de seguridad. Asegúrate de crearlo y configurarlo correctamente antes de ejecutar los contenedores.
+El contenedor de la aplicación utiliza las variables de entorno definidas en el archivo `.env` para conectarse a la base de datos
+
+## Endpoints
 ### Endpoints disponibles
 
 | Método | Endpoint         | Descripción                              | Ejemplo de JSON de entrada/salida |
@@ -115,7 +153,7 @@ mvn test
 
 ## Autor
 
-Desarrollado por **jarodsmdev**.
+Desarrollado por **Leonel Briones Palacios**.
 
 ## Licencia
 
