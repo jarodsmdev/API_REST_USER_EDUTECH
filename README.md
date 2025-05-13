@@ -20,11 +20,13 @@ Este proyecto es una API RESTful desarrollada con **Spring Boot** que permite la
 ## Instalación
 
 1. Clona este repositorio:
+
    ```bash
    git clone https://github.com/jarodsmdev/API_REST_USER_EDUTECH.git
    ```
 
 2. Configura la base de datos en el archivo `src/main/resources/application.properties` si deseas usar una base de datos diferente a MySQL.
+
   - Configura las variables del entorno indicadas en este archivo.
   - `${DB_ENDPOINT}`: Dirección del host donde se encuentra la base de datos (por ejemplo, IP o nombre del servidor).
   - `${DB_PORT}`: Puerto en el que escucha la base de datos (por defecto 3306 para MySQL).
@@ -33,18 +35,23 @@ Este proyecto es una API RESTful desarrollada con **Spring Boot** que permite la
   - `${DB_PASSWORD}`: Contraseña del usuario para acceder a la base de datos.
 
 3. Compila el proyecto con Maven:
+
    ```bash
    mvn clean install
    ```
 
 4. Ejecuta la aplicación:
+
    ```bash
    mvn spring-boot:run
    ```
 
 ### Base URL
-```
-http://localhost:8081/api/v1/users
+
+La API estará disponible en la siguiente URL:
+
+```url
+http://localhost/api/v1/users
 ```
 
 ## Ejecución con Docker
@@ -83,23 +90,40 @@ DB_PASSWORD=<contraseña_de_tu_base_de_datos>
    Esto detendrá y eliminará el contenedor, pero no eliminará la imagen.
 
 ### Notas importantes
+
 El archivo `.env` no se incluye en el repositorio por razones de seguridad. Asegúrate de crearlo y configurarlo correctamente antes de ejecutar los contenedores.
 El contenedor de la aplicación utiliza las variables de entorno definidas en el archivo `.env` para conectarse a la base de datos
 
 ## Endpoints
+
+La API expone varios endpoints para interactuar con la información de los usuarios. A continuación de detallan los métodos HTTP y sus respectivas rutas.
+
 ### Endpoints disponibles
 
-| Método | Endpoint         | Descripción                              | Ejemplo de JSON de entrada/salida |
+`http://localhost/`: Ruta base para indicar el funcionamiento de la API.
+`http://localhost/api/v1/users`: Ruta base para la gestión de usuarios.
+`http://localhost/swagger-ui/index.html`: Ruta para acceder a la documentación de la API generada por Swagger.
+
+#### Ruta Raíz (/)
+
+| Método | Endpoint         | Descripción                              |                                                 |
+|--------|------------------|------------------------------------------|-------------------------------------------------|
+| GET    | `/`              | Verifica el estado de la API.            | `Aplication is running` mostrará en el navegador|
+
+#### Ruta de Usuarios (`api/v1/users`)
+
+| Método | Endpoint         | Descripción                              | Ejemplo de JSON de entrada/salida  |
 |--------|------------------|------------------------------------------|------------------------------------|
 | GET    | `/`              | Obtiene todos los usuarios.              | N/A                                |
 | GET    | `/{uuid}`        | Obtiene un usuario por su ID.            | N/A                                |
-| POST   | `/`              | Crea un nuevo usuario.                   | Ver ejemplo de JSON más abajo.    |
-| PUT    | `/`              | Actualiza un usuario existente.          | Ver ejemplo de JSON más abajo.    |
+| POST   | `/`              | Crea un nuevo usuario.                   | Ver ejemplo de JSON más abajo.     |
+| PUT    | `/`              | Actualiza un usuario existente.          | Ver ejemplo de JSON más abajo.     |
 | DELETE | `/{uuid}`        | Elimina un usuario por su ID.            | N/A                                |
 
 ### Ejemplo de JSON de entrada/salida
 
 #### Crear o actualizar un usuario
+
 ```json
 {
   "userId": "b29052e1-2df8-4b2d-aa2f-6dd5cbac3c64",
@@ -117,14 +141,20 @@ El contenedor de la aplicación utiliza las variables de entorno definidas en el
 ## Estructura del proyecto
 
 ```
-src/main/java/com/briones/users/management
-├── controller       # Controladores REST
-├── exception        # Clases de manejo de excepciones
-├── model            # Entidades JPA y DTOs
-│   ├── dto          # Clases DTO
-├── repository       # Repositorios JPA
-├── service          # Lógica de negocio
-└── UserManagementApiApplication.java  # Clase principal
+src/main
+      | /java/com/briones/users/management
+      | ├── controller       # Controladores REST
+      | ├── exception        # Clases de manejo de excepciones
+      | ├── model            # Entidades JPA y DTOs
+      | │   ├── dto          # Clases DTO
+      | ├── repository       # Repositorios JPA
+      | ├── service          # Lógica de negocio
+      | └── UserManagementApiApplication.java  # Clase principal
+      | /resources
+      | ├── application.properties  # Configuración de la aplicación
+      | ├── application-test.properties  # Configuración para pruebas
+      | └── static
+      └── templates
 ```
 
 ## Dependencias principales
@@ -137,7 +167,7 @@ src/main/java/com/briones/users/management
 - **Lombok**: Para reducir el código boilerplate.
 - **Swagger UI**: Para documentar y probar los endpoints de la API de manera interactiva.
   - Una vez que la aplicación esté en ejecución, puedes acceder a la interfaz de Swagger UI en la siguiente URL:
-  ```http://localhost:8081/swagger-ui/index.html```
+  ```http://localhost/swagger-ui/index.html```
 
 ## Excepciones personalizadas
 
@@ -147,6 +177,7 @@ src/main/java/com/briones/users/management
 ## Pruebas
 
 Para ejecutar las pruebas, utiliza el siguiente comando:
+
 ```bash
 mvn test
 ```
