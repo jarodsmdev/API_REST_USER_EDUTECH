@@ -6,13 +6,13 @@ public enum Rol {
     ROLE_SOPORTE("Soporte técnico"),
     ROLE_ADMINISTRACION("Administración general");
 
-    private final String descripcion;
+    private final String description;
 
-    Rol(String descripcion) {
-        this.descripcion = descripcion;
+    Rol(String description) {
+        this.description = description;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getDescription() {
+        return description;
     }
 }
