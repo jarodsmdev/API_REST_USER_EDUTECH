@@ -3,6 +3,7 @@ package com.briones.users.management.model.dto;
 import com.briones.users.management.model.Rol;
 import lombok.Data;
 
+
 import java.time.LocalDate;
 import java.util.UUID;
 
