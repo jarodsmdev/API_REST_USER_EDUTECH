@@ -1,5 +1,6 @@
 package com.briones.users.management;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -10,4 +11,8 @@ public class UserManagementServiceApplication {
 		SpringApplication.run(UserManagementServiceApplication.class, args);
 	}
 
+	@PostConstruct
+	public void printVars() {
+		System.out.println(">>DB_ENDPOINT: " + System.getenv("DB_ENDPOINT"));
+	}
 }

@@ -31,7 +31,12 @@ public class DataLoader implements CommandLineRunner {
                     .address(faker.address().fullAddress())
                     .password("123456789A!")
                     .isActive(faker.bool().bool())
-                    .rol(Rol.ROLE_ADMINISTRACION)
+                    .rol(faker.options().option(
+                            Rol.ROLE_ADMIN,
+                            Rol.ROLE_PROFESOR,
+                            Rol.ROLE_SOPORTE,
+                            Rol.ROLE_ADMINISTRACION
+                    ))
                     .build();
             userRepository.save(user);
         }
