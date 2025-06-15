@@ -1,5 +1,8 @@
 package com.briones.users.management.exception;
 
+import lombok.Getter;
+
+@Getter
 public class DuplicateKeyException extends RuntimeException{
     private String field;
     private String value;
@@ -12,13 +15,5 @@ public class DuplicateKeyException extends RuntimeException{
         super(message);
         this.field = field;
         this.value = value;
-    }
-
-    public String getField() {
-        return field;
-    }
-
-    public String getValue() {
-        return value;
     }
 }
