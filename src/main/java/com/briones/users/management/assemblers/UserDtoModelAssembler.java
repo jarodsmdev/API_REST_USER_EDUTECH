@@ -2,14 +2,14 @@ package com.briones.users.management.assemblers;
 
 import com.briones.users.management.controller.UserController;
 import com.briones.users.management.exception.UserNotFoundException;
-import com.briones.users.management.model.User;
+import com.briones.users.management.model.dto.UserDto;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserModelAssembler implements RepresentationModelAssembler<User, EntityModel<User>> {
+public class UserModelAssembler implements RepresentationModelAssembler<UserDto, EntityModel<UserDto>> {
     @Override
     public EntityModel<User> toModel(User user) {
         try {
