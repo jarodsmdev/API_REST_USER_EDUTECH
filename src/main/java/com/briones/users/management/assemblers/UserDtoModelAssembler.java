@@ -1,6 +1,6 @@
 package com.briones.users.management.assemblers;
 
-import com.briones.users.management.controller.UserController;
+import com.briones.users.management.controller.UserControllerV2;
 import com.briones.users.management.exception.UserNotFoundException;
 import com.briones.users.management.model.dto.UserDto;
 import org.springframework.hateoas.EntityModel;
@@ -9,15 +9,15 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserModelAssembler implements RepresentationModelAssembler<UserDto, EntityModel<UserDto>> {
+public class UserDtoModelAssembler implements RepresentationModelAssembler<UserDto, EntityModel<UserDto>> {
     @Override
-    public EntityModel<User> toModel(User user) {
+    public EntityModel<UserDto> toModel(UserDto user) {
         try {
             return EntityModel.of(user,
                     // 1. Primero se crea el Link con linkTo() y methodOn()
                     // 2. Luego, sobre ese Link, se aplica .withSelfRel()
-                    linkTo(methodOn(UserController.class).getUserById(user.getUserId())).withSelfRel(),
-                    linkTo(methodOn(UserController.class).getAllUsers()).withRel("users"));
+                    linkTo(methodOn(UserControllerV2.class).getUserById(user.getUserId())).withSelfRel(),
+                    linkTo(methodOn(UserControllerV2.class).getAllUsers()).withRel("users"));
         } catch (UserNotFoundException e) {
             // Es poco común que un UserNotFoundException ocurra aquí.
             // Si user.getUserId() lanzara una excepción, sería antes.

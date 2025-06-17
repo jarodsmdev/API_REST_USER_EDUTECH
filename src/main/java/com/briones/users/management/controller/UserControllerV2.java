@@ -1,5 +1,6 @@
 package com.briones.users.management.controller;
 
+import com.briones.users.management.assemblers.UserDtoModelAssembler;
 import com.briones.users.management.exception.DuplicateKeyException;
 import com.briones.users.management.exception.UserNotFoundException;
 import com.briones.users.management.model.User;
@@ -15,11 +16,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import java.net.URI;
 import java.util.List;
@@ -28,23 +36,49 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v2/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name="User", description = "User API REST.  This API allows you to manage users.")
+@Tag(name="User V2", description = "User API REST.  This API allows you to manage users.")
 public class UserControllerV2 {
 
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private UserDtoModelAssembler userDtoAssembler;
+
     private final UserMapper userMapper = UserMapper.INSTANCE;
 
     @Operation(
-            summary = "Retrieve all users",
-            description = "Returns a list of all users registered in the system."
+            summary = "Retrieve all users with HATEOAS links",
+            description = "Returns a list of all users registered in the system, including HATEOAS links for navigation and related actions."
     )
-    @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "List of all users retrieved successfully with HATEOAS links",
+                    content = @Content(
+                            mediaType = MediaTypes.HAL_JSON_VALUE,
+                            schema = @Schema(implementation = CollectionModel.class)
+                    )
+            ),
+            // Puedes añadir otras respuestas de error si tu método las maneja
+            @ApiResponse(responseCode = "500", description = "Internal Server Error",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))) // Asume tu ErrorResponse
+    })
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    public ResponseEntity<CollectionModel<EntityModel<UserDto>>> getAllUsers() {
         List<User> users = userService.getAllUsers();
-        List<UserDto> userDtos = users.stream().map(userMapper::toDto).toList();
-        return ResponseEntity.status(HttpStatus.OK).body(userDtos);
+
+        // Mapea los User a UserDto y luego usa el ensamblador para convertirlos en EntityModel con enlaces
+        List<EntityModel<UserDto>> userModels = users.stream()
+                .map(userMapper::toDto)
+                .map(userDtoAssembler::toModel)
+                .toList();
+
+        // Crea el CollectionModel para la lista, añadiento un enlace "self" a esta misma collección
+        CollectionModel<EntityModel<UserDto>> collectionModel = CollectionModel.of(userModels,
+                linkTo(methodOn(UserControllerV2.class).getAllUsers()).withSelfRel());
+
+        return ResponseEntity.status(HttpStatus.OK).body(collectionModel);
     }
 
     @Operation(
@@ -52,8 +86,14 @@ public class UserControllerV2 {
             description = "Returns the user information that matches the given UUID."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User found"),
-            @ApiResponse(responseCode = "404", description = "User not found")
+            @ApiResponse(responseCode = "200", description = "User found", content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = UserDto.class)
+            )),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = ErrorResponse.class)
+            ))
     })
     @Parameter(
             name = "uuid",
