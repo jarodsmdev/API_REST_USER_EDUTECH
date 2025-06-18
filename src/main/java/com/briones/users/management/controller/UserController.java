@@ -8,6 +8,7 @@ import com.briones.users.management.model.dto.UserMapper;
 import com.briones.users.management.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,7 +31,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name="User", description = "User API REST.  This API allows you to manage users.")
+@Tag(name="User v1", description = "User API REST.  This API allows you to manage users.")
 public class UserController {
 
     @Autowired
@@ -40,7 +41,17 @@ public class UserController {
 
     @Operation(
             summary = "Retrieve all users",
-            description = "Returns a list of all users registered in the system."
+            description = "Returns a list of all users registered in the system.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successful operation",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = UserDto.class))
+                            )
+                    )
+            }
     )
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers() {
@@ -49,16 +60,19 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userDtos);
     }
 
+
     @Operation(
             summary = "Retrieve user by ID",
             description = "Returns the user information that matches the given UUID."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User found", content = @Content(
+            @ApiResponse(responseCode = "200", description = "User found",
+                    content = @Content(
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = UserDto.class)
             )),
-            @ApiResponse(responseCode = "404", description = "User not found", content = @Content(
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content(
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = ErrorResponse.class)
             ))
@@ -83,8 +97,19 @@ public class UserController {
             description = "Creates and stores a new user in the system."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User created successfully"),
-            @ApiResponse(responseCode = "409", description = "Duplicate user or constraint violation")
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "User created successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = User.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Duplicate user or constraint violation",
+                    content = @Content(mediaType = "application/json")
+            )
     })
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "User object to be created. Must include all required fields.",
@@ -95,7 +120,8 @@ public class UserController {
             )
     )
     @PostMapping
-    private ResponseEntity<User> saveUser(@Valid @RequestBody User user) throws DuplicateKeyException, UserNotFoundException {
+    private ResponseEntity<User> saveUser(@Valid @RequestBody User user)
+            throws DuplicateKeyException, UserNotFoundException {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{userId}")
@@ -106,14 +132,34 @@ public class UserController {
                 .body(userService.saveUser(user));
     }
 
+
     @Operation(
             summary = "Update existing user",
             description = "Updates the information of an existing user. The user must already exist."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "User updated successfully"),
-            @ApiResponse(responseCode = "404", description = "User not found"),
-            @ApiResponse(responseCode = "409", description = "Conflict or duplicate data")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "User updated successfully",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = User.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                    content = @Content(
+                            mediaType = "application/json"
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict or duplicate data",
+                    content = @Content(
+                            mediaType = "application/json"
+                    )
+            )
     })
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "User object with updated fields. The user must already exist in the system.",
@@ -124,19 +170,31 @@ public class UserController {
             )
     )
     @PutMapping
-    public ResponseEntity<User> updateUser(@Valid @RequestBody User user) throws DuplicateKeyException, UserNotFoundException {
+    public ResponseEntity<User> updateUser(@Valid @RequestBody User user)
+            throws DuplicateKeyException, UserNotFoundException {
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .body(userService.saveUser(user));
     }
+
 
     @Operation(
             summary = "Delete user by ID",
             description = "Deletes the user that matches the provided UUID."
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "User deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "User not found")
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "User deleted successfully",
+                    content = @Content // No hay body en la respuesta
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "User not found",
+                    content = @Content(
+                            mediaType = "application/json"
+                    )
+            )
     })
     @Parameter(
             name = "uuid",
@@ -149,4 +207,5 @@ public class UserController {
         userService.deleteUserById(uuid);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
 }

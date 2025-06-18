@@ -36,7 +36,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v2/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name="User V2", description = "User API REST.  This API allows you to manage users.")
+@Tag(name="User v2", description = "User API REST.  This API allows you to manage users.")
 public class UserControllerV2 {
 
     @Autowired
