@@ -5,7 +5,7 @@ services:
       context: . # Contexto de construcción
       dockerfile: Dockerfile
     ports: # Puertos a exponer
-      - "8081:8081"
+      - "80:8081"
     command: ["java", "-jar", "/user_app/user_app.jar"] # Comando para ejecutar la aplicación
     env_file:
       - .env
