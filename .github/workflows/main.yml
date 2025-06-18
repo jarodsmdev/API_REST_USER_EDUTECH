@@ -60,7 +60,7 @@ jobs:
           host: ${{ secrets.IP_SERVER }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
-          port: ${{ secrets.DB_PORT }}
+          port: ${{ secrets.PORT }}
           script: |
             cat <<EOF > /home/ubuntu/app/api-user-management/.env
             DB_ENDPOINT=${{ secrets.DB_ENDPOINT }}
