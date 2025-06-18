@@ -9,6 +9,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
+
 @Profile("dev")
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -25,11 +27,11 @@ public class DataLoader implements CommandLineRunner {
             User user = User.builder()
                     .firstName(faker.name().firstName())
                     .lastName(faker.name().lastName())
-                    //.birthDate(faker.date())
+                    .birthDate(faker.date().birthday(18,65).toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                     .email(faker.internet().emailAddress())
                     .phone(faker.phoneNumber().phoneNumber())
                     .address(faker.address().fullAddress())
-                    .password("123456789A!")
+                    .password(faker.number().digits(9) + faker.letterify("?").toUpperCase().charAt(0) + "!")
                     .isActive(faker.bool().bool())
                     .rol(faker.options().option(
                             Rol.ROLE_ADMIN,
