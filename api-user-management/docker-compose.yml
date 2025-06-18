@@ -1,0 +1,11 @@
+version: "3.8" # Versión del formato de Docker Compose
+services:
+  api_users: # Servicio de la API de usuarios
+    build: # Construcción de la imagen
+      context: . # Contexto de construcción
+      dockerfile: Dockerfile
+    ports: # Puertos a exponer
+      - "8081:8081"
+    command: ["java", "-jar", "/user_app/user_app.jar"] # Comando para ejecutar la aplicación
+    env_file:
+      - .env
