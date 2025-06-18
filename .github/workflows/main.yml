@@ -22,7 +22,7 @@ jobs:
 
       - name: Compilar y ejecutar pruebas
         run: |
-          cd ejmploJava
+          cd api-user-management
           mvn test
 
   deploy:
@@ -41,7 +41,7 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            mkdir -p /home/ubuntu/fs1001
+            mkdir -p /home/ubuntu/app
 
       - name: Sincronizar archivos con el servidor
         uses: burnett01/rsync-deployments@7.0.2
