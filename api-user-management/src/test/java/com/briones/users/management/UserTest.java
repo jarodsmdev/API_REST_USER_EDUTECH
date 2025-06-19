@@ -65,7 +65,7 @@ public class UserTest {
     }
 
     @Test
-    public void testCreateUserWithExistingEmailThrowsException() throws UserNotFoundException {
+    public void testCreateUserWithExistingEmailThrowsDuplicateKeyException() throws UserNotFoundException {
         // Arrange: Preparación del entorno del test
         // Creamos otro usuario que simula estar ya registrado en la BBDD
         log.info(">> Test: Crear usuario con email existente lanza excepción");

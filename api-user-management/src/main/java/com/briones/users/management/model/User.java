@@ -22,15 +22,15 @@ public class User {
     private String lastName;
     @DateTimeFormat(pattern = "MM/dd/yyyy")
     private LocalDate birthDate;
-    @NotBlank(message = "El correo electrónico no puede estar vacío")
-    @Email(message = "El correo electrónico debe tener un formato válido")
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Email must be in a valid format")
     @Column(unique = true, nullable = false)
     private String email;
     private String phone;
     private String address;
-    @NotBlank(message = "La contraseña es obligatoria")
-    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?\":{}|<>]).+$", message = "La contraseña debe contener al menos una letra mayúscula, un número y un carácter especial")
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?\":{}|<>]).+$", message = "Password must contain at least one uppercase letter, one number, and one special character")
     private String password;
     private boolean isActive = false;
     @Enumerated(EnumType.STRING)

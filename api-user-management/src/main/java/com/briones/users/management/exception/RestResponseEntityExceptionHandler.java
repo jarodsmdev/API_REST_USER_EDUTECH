@@ -1,7 +1,6 @@
 package com.briones.users.management.exception;
 
 import com.briones.users.management.exception.dto.ErrorMessage;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -50,7 +49,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             errors.put(fieldName, errorMessage);
         });
 
-        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST, "Error de validación",errors);
+        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.BAD_REQUEST, "Validation Error",errors);
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 }

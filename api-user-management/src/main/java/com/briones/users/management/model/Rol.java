@@ -1,10 +1,10 @@
 package com.briones.users.management.model;
 
 public enum Rol {
-    ROLE_ADMIN("Administrador del sistema"),
-    ROLE_PROFESOR("Profesor de la institución"),
-    ROLE_SOPORTE("Soporte técnico"),
-    ROLE_ADMINISTRACION("Administración general");
+    ROLE_ADMIN("System Administrator"),
+    ROLE_PROFESOR("Institution Professor"),
+    ROLE_SOPORTE("Technical Support"),
+    ROLE_ADMINISTRACION("General Administration");
 
     private final String description;
 
