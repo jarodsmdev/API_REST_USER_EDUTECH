@@ -140,7 +140,7 @@ La API expone varios endpoints para interactuar con la información de los usuar
 
 ## Estructura del proyecto
 
-```
+```plain
 src/main
       | /java/com/briones/users/management
       | ├── controller       # Controladores REST
@@ -150,7 +150,7 @@ src/main
       | ├── repository       # Repositorios JPA
       | ├── service          # Lógica de negocio
       | └── UserManagementApiApplication.java  # Clase principal
-      | |/resources
+      | /resources
       | ├── application.properties  # Configuración de la aplicación
       | ├── application-test.properties  # Configuración para pruebas
       | └── static
