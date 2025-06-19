@@ -150,7 +150,7 @@ src/main
       | ├── repository       # Repositorios JPA
       | ├── service          # Lógica de negocio
       | └── UserManagementApiApplication.java  # Clase principal
-      | /resources
+      | |/resources
       | ├── application.properties  # Configuración de la aplicación
       | ├── application-test.properties  # Configuración para pruebas
       | └── static
