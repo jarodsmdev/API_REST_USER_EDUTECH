@@ -188,4 +188,4 @@ Desarrollado por **Leonel Briones Palacios**.
 
 ## Licencia
 
-Este proyecto está licenciado bajo la [MIT License](LICENSE)
+Este proyecto está licenciado bajo la [MIT License](LICENSE).
