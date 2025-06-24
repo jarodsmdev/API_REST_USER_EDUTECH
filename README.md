@@ -101,8 +101,13 @@ La API expone varios endpoints para interactuar con la información de los usuar
 ### Endpoints disponibles
 
 `http://localhost/`: Ruta base para indicar el funcionamiento de la API.
-`http://localhost/api/v1/users`: Ruta base para la gestión de usuarios.
 `http://localhost/swagger-ui/index.html`: Ruta para acceder a la documentación de la API generada por Swagger.
+
+---
+
+`http://localhost/api/v1/users`: Ruta base para la gestión de usuarios.
+`http://localhost/api/v2/users`: Ruta base para la gestión de usuarios con implementación HATEOAS.
+
 
 #### Ruta Raíz (/)
 
@@ -120,7 +125,47 @@ La API expone varios endpoints para interactuar con la información de los usuar
 | PUT    | `/`              | Actualiza un usuario existente.          | Ver ejemplo de JSON más abajo.     |
 | DELETE | `/{uuid}`        | Elimina un usuario por su ID.            | N/A                                |
 
+### Ruta de Usuarios (`api/v2/users`) Se implementó HATEOAS
+
+| Método | Endpoint         | Descripción                              | Ejemplo de JSON de entrada/salida  |
+|--------|------------------|------------------------------------------|------------------------------------|
+| GET    | `/`              | Obtiene todos los usuarios HATEOAS       | N/A                                |
+| GET    | `/{uuid}`        | Obtiene un usuario por su ID.            | N/A                                |
+| POST   | `/`              | Crea un nuevo usuario.                   | Ver ejemplo de JSON más abajo.     |
+| PUT    | `/`              | Actualiza un usuario existente.          | Ver ejemplo de JSON más abajo.     |
+| DELETE | `/{uuid}`        | Elimina un usuario por su ID.            | N/A                                |
+
 ### Ejemplo de JSON de entrada/salida
+
+#### Ejemplo de respuesta con HATEOAS
+
+```json
+{
+  "_embedded": {
+    "userDtoList": [
+      {
+        "userId": "b29052e1-2df8-4b2d-aa2f-6dd5cbac3c64",
+        "firstName": "Susana",
+        "lastName": "Oria",
+        "email": "susana.oria@example.com",
+        "_links": {
+          "self": {
+            "href": "http://localhost/api/v2/users/b29052e1-2df8-4b2d-aa2f-6dd5cbac3c64"
+          },
+          "all-users": {
+            "href": "http://localhost/api/v2/users"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "self": {
+      "href": "http://localhost/api/v2/users"
+    }
+  }
+}
+```
 
 #### Crear o actualizar un usuario
 
@@ -176,10 +221,32 @@ src/main
 
 ## Pruebas
 
-Para ejecutar las pruebas, utiliza el siguiente comando:
+Este proyecto incluye pruebas unitarias centradas en la capa de servicios, utilizando **JUnit** y **Mockito** para simular dependencias y verificar el comportamiento de los métodos de negocio.
+
+Además, se ha integrado **JaCoCo (Java Code Coverage)** para generar reportes de cobertura de código de forma automática durante la ejecución de las pruebas.
+
+### Ejecutar pruebas
+
+Para ejecutar las pruebas:
 
 ```bash
 mvn test
+```
+
+### Generar reporte de cobertura con JaCoCo
+
+El reporte HTML de JaCoco se genera automáticamente al ejecutar los tests con Maven.  Para visualizarlo:
+
+1. Ejecuta
+
+```
+mvn clean verify
+```
+
+2. Abre el archivo generado en la ruta
+
+```
+target/site/jacoco/index.html
 ```
 
 ## Autor
