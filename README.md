@@ -1,258 +1,164 @@
-# User Management API
+# API de Gestión de Exámenes (Evaluaciones)
 
-Este proyecto es una API RESTful desarrollada con **Spring Boot** que permite la gestión de usuarios. Incluye operaciones CRUD (Crear, Leer, Actualizar, Eliminar) y utiliza el patrón DTO para la transferencia de datos entre las capas de la aplicación.
-
-## Características
-
-- **CRUD de usuarios**: Crear, obtener, actualizar y eliminar usuarios.
-- **Validación de datos**: Validación de entradas mediante anotaciones de `jakarta.validation`.
-- **Patrón DTO**: Uso de `UserDto` para transferir datos entre la capa de servicio y el controlador.
-- **Mapeo automático**: Implementación de MapStruct para mapear entre entidades y DTOs.
-- **Manejo de excepciones**: Gestión de errores como `DuplicateKeyException` y `UserNotFoundException`.
-- **Base de datos**: Persistencia de datos utilizando JPA con una base de datos relacional.
-
-## Requisitos previos
-
-- **Java**: Versión 17 o superior.
-- **Maven**: Versión 3.8 o superior.
-- **Base de datos**: Configurada en el archivo `application.properties`. Por defecto viene la configuración para MySQL. (Puedes realizar los cambios a otro motor de bases de datos si así lo prefieres).
-
-## Instalación
-
-1. Clona este repositorio:
-
-   ```bash
-   git clone https://github.com/jarodsmdev/API_REST_USER_EDUTECH.git
-   ```
-
-2. Configura la base de datos en el archivo `src/main/resources/application.properties` si deseas usar una base de datos diferente a MySQL.
-
-  - Configura las variables del entorno indicadas en este archivo.
-  - `${DB_ENDPOINT}`: Dirección del host donde se encuentra la base de datos (por ejemplo, IP o nombre del servidor).
-  - `${DB_PORT}`: Puerto en el que escucha la base de datos (por defecto 3306 para MySQL).
-  - `${DB_NAME}`: Nombre de la base de datos a la que se va a conectar la aplicación.
-  - `${DB_USERNAME}`: Usuario con el que se autentica la conexión a la base de datos.
-  - `${DB_PASSWORD}`: Contraseña del usuario para acceder a la base de datos.
-
-3. Compila el proyecto con Maven:
-
-   ```bash
-   mvn clean install
-   ```
-
-4. Ejecuta la aplicación:
-
-   ```bash
-   mvn spring-boot:run
-   ```
-
-### Base URL
-
-La API estará disponible en la siguiente URL:
-
-```url
-http://localhost/api/v1/users
-```
-
-## Ejecución con Docker
-
-Este proyecto incluye un `Dockerfile` y un archivo `docker-compose.yml` para facilitar la construcción y ejecución de la aplicación en un contenedor Docker.
-
-### Requisitos previos
-
-- **Docker**: Asegúrate de tener Docker instalado en tu sistema. [Guía de instalación de Docker](https://docs.docker.com/get-docker/)
-- **Docker Compose**: Asegúrate de tener Docker Compose instalado. [Guía de instalación de Docker Compose](https://docs.docker.com/compose/install/)
-- **Archivo `.env`**: Es necesario crear un archivo `.env` en la raíz del proyecto con las siguientes variables de entorno configuradas:
-
-```dotenv
-DB_ENDPOINT=<endpoint_de_tu_base_de_datos>
-DB_PORT=<puerto_de_tu_base_de_datos>
-DB_NAME=<nombre_de_tu_base_de_datos>
-DB_USERNAME=<usuario_de_tu_base_de_datos>
-DB_PASSWORD=<contraseña_de_tu_base_de_datos>
-```
-
-### Construcción de la imagen Docker y ejecución
-
-1. Abre una terminal y navega hasta la raíz del proyecto.
-2. Ejecuta el siguiente comando para construir la imagen Docker:
-   ```bash
-   docker compose up -d --build
-   ```
-3. Una vez que la imagen se haya construido y el contenedor esté en ejecución, puedes acceder a la API en la siguiente URL:
-   ```
-   http://localhost/api/v1/users
-   ```
-4. Para detener y eliminar el contenedor, ejecuta:
-   ```bash
-    docker compose down
-    ```
-   Esto detendrá y eliminará el contenedor, pero no eliminará la imagen.
-
-### Notas importantes
-
-El archivo `.env` no se incluye en el repositorio por razones de seguridad. Asegúrate de crearlo y configurarlo correctamente antes de ejecutar los contenedores.
-El contenedor de la aplicación utiliza las variables de entorno definidas en el archivo `.env` para conectarse a la base de datos
-
-## Endpoints
-
-La API expone varios endpoints para interactuar con la información de los usuarios. A continuación de detallan los métodos HTTP y sus respectivas rutas.
-
-### Endpoints disponibles
-
-`http://localhost/`: Ruta base para indicar el funcionamiento de la API.
-`http://localhost/swagger-ui/index.html`: Ruta para acceder a la documentación de la API generada por Swagger.
+Este microservicio permite administrar los exámenes y conectarse con el sistema de usuarios a través de un cliente REST.
 
 ---
 
-`http://localhost/api/v1/users`: Ruta base para la gestión de usuarios.
-`http://localhost/api/v2/users`: Ruta base para la gestión de usuarios con implementación HATEOAS.
+## Tecnologías Usadas
 
+- Java 17
+- Spring Boot 3+  
+- Spring Data JPA  
+- MySQL Database  
+- Docker  
+- Lombok  
+- Bean Validation con `@Valid`  
+- Spring RestTemplate (para comunicación con microservicio de usuarios)
 
-#### Ruta Raíz (/)
+---
 
-| Método | Endpoint         | Descripción                              |                                                 |
-|--------|------------------|------------------------------------------|-------------------------------------------------|
-| GET    | `/`              | Verifica el estado de la API.            | `Aplication is running` mostrará en el navegador|
+## Endpoints
 
-#### Ruta de Usuarios (`api/v1/users`)
+### Obtener todos los exámenes
 
-| Método | Endpoint         | Descripción                              | Ejemplo de JSON de entrada/salida  |
-|--------|------------------|------------------------------------------|------------------------------------|
-| GET    | `/`              | Obtiene todos los usuarios.              | N/A                                |
-| GET    | `/{uuid}`        | Obtiene un usuario por su ID.            | N/A                                |
-| POST   | `/`              | Crea un nuevo usuario.                   | Ver ejemplo de JSON más abajo.     |
-| PUT    | `/`              | Actualiza un usuario existente.          | Ver ejemplo de JSON más abajo.     |
-| DELETE | `/{uuid}`        | Elimina un usuario por su ID.            | N/A                                |
+**GET** `/api/v1/exams`  
+Devuelve una lista de todos los exámenes.
 
-### Ruta de Usuarios (`api/v2/users`) Se implementó HATEOAS
+---
 
-| Método | Endpoint         | Descripción                              | Ejemplo de JSON de entrada/salida  |
-|--------|------------------|------------------------------------------|------------------------------------|
-| GET    | `/`              | Obtiene todos los usuarios HATEOAS       | N/A                                |
-| GET    | `/{uuid}`        | Obtiene un usuario por su ID.            | N/A                                |
-| POST   | `/`              | Crea un nuevo usuario.                   | Ver ejemplo de JSON más abajo.     |
-| PUT    | `/`              | Actualiza un usuario existente.          | Ver ejemplo de JSON más abajo.     |
-| DELETE | `/{uuid}`        | Elimina un usuario por su ID.            | N/A                                |
+### Obtener examen por ID
 
-### Ejemplo de JSON de entrada/salida
+**GET** `/api/v1/exams/{id}`
 
-#### Ejemplo de respuesta con HATEOAS
+- Parámetro: `id` (Long)  
+- Devuelve los datos del examen o `404 Not Found` si no existe.
 
-```json
-{
-  "_embedded": {
-    "userDtoList": [
-      {
-        "userId": "b29052e1-2df8-4b2d-aa2f-6dd5cbac3c64",
-        "firstName": "Susana",
-        "lastName": "Oria",
-        "email": "susana.oria@example.com",
-        "_links": {
-          "self": {
-            "href": "http://localhost/api/v2/users/b29052e1-2df8-4b2d-aa2f-6dd5cbac3c64"
-          },
-          "all-users": {
-            "href": "http://localhost/api/v2/users"
-          }
-        }
-      }
-    ]
-  },
-  "_links": {
-    "self": {
-      "href": "http://localhost/api/v2/users"
-    }
-  }
-}
-```
+---
 
-#### Crear o actualizar un usuario
+### Agregar un examen
+
+**POST** `/api/v1/exams`
+
+- Parámetros opcionales:
+  - `userId` (UUID): ID del usuario que crea el examen.
+- Body (JSON):
 
 ```json
 {
-  "userId": "b29052e1-2df8-4b2d-aa2f-6dd5cbac3c64",
-  "firstName": "Susana",
-  "lastName": "Oria",
-  "birthDate": "1991-07-22",
-  "email": "susana.oria@example.com",
-  "phone": "+987654321",
-  "address": "Calle Ficticia 321, Ciudad",
-  "active": false,
-  "rol": "ROLE_ADMIN"
+  "name": "Examen Matemáticas",
+  "description": "Examen de álgebra",
+  "examDate": "2024-12-01",
+  "maxScore": 100
 }
 ```
 
-## Estructura del proyecto
+- Si `userId` es proporcionado, se consulta el microservicio de usuarios para obtener el email del usuario creador.
+- Devuelve el examen creado.
+- Valida campos como `name` (no nulo) y `maxScore` (positivo o cero).
 
-```plain
-src/main
-      | /java/com/briones/users/management
-      | ├── controller       # Controladores REST
-      | ├── exception        # Clases de manejo de excepciones
-      | ├── model            # Entidades JPA y DTOs
-      | │   ├── dto          # Clases DTO
-      | ├── repository       # Repositorios JPA
-      | ├── service          # Lógica de negocio
-      | └── UserManagementApiApplication.java  # Clase principal
-      | /resources
-      | ├── application.properties  # Configuración de la aplicación
-      | ├── application-test.properties  # Configuración para pruebas
-      | └── static
-      └── templates
+---
+
+### Actualizar examen
+
+**PUT** `/api/v1/exams/{id}`
+
+- Parámetro: `id` (Long)  
+- Body igual al de POST (los campos se actualizan parcialmente si están presentes).  
+- Devuelve el examen actualizado o `404 Not Found` si no existe.
+
+---
+
+### Eliminar examen
+
+**DELETE** `/api/v1/exams/{id}`
+
+- Parámetro: `id` (Long)  
+- Devuelve código `204 No Content` si fue eliminado.  
+- Devuelve `404 Not Found` si no existe el examen.
+
+---
+
+## Manejo de Errores
+
+- `404 Not Found`: Cuando no se encuentra el recurso solicitado.
+- `400 Bad Request`: Para validaciones de entrada no válidas (definido por `BadRequestException`).
+
+Los errores incluyen mensajes descriptivos y timestamp.
+
+---
+
+## Comunicación con Microservicio de Usuarios
+
+Comunicación con el Microservicio de Usuarios
+Este microservicio (api-grades) se comunica con el microservicio de usuarios (api-users) repositorio en este enlace: [https://github.com/jarodsmdev/API_REST_USER_EDUTECH](https://github.com/jarodsmdev/API_REST_USER_EDUTECH) a través de HTTP usando RestTemplate. La URL del servicio de usuarios en este proyecto se configura mediante variables de entorno, permitiendo flexibilidad entre entornos de desarrollo y producción.
+
+Configuración del Endpoint
+
+El valor de la URL se define usando la propiedad:
+
+```properties
+users.api.url=${API_USER_URL}
+
 ```
 
-## Dependencias principales
+Esta propiedad se encuentra en el archivo `application.properties` y se resuelve con la variable de entorno `API_USER_URL`, que puedes definir en un archivo `.env` o directamente en tu entorno de ejecución.:
 
-- **Spring Boot Starter Web**: Para construir la API REST.
-- **Spring Boot Starter Data JPA**: Para la persistencia de datos.
-- **Spring Boot Starter Validation**: Para la validación de entrada de datos.
-- **MySQL Database**: Base de datos MySQL para desarrollo y pruebas.
-- **MapStruct**: Para el mapeo entre entidades y DTOs.
-- **Lombok**: Para reducir el código boilerplate.
-- **Swagger UI**: Para documentar y probar los endpoints de la API de manera interactiva.
-  - Una vez que la aplicación esté en ejecución, puedes acceder a la interfaz de Swagger UI en la siguiente URL:
-  ```http://localhost/swagger-ui/index.html```
+```properties
+API_USER_URL=http://api-users:8081
+```
 
-## Excepciones personalizadas
+En ejecución local sin Docker Compose, puedes usar `http://localhost:8081`.
 
-- **DuplicateKeyException**: Se lanza cuando se intenta crear o actualizar un usuario con un correo electrónico ya existente.
-- **UserNotFoundException**: Se lanza cuando no se encuentra un usuario con el ID o correo proporcionado.
+---
 
-## Pruebas
+## 🐳 Docker
 
-Este proyecto incluye pruebas unitarias centradas en la capa de servicios, utilizando **JUnit** y **Mockito** para simular dependencias y verificar el comportamiento de los métodos de negocio.
-
-Además, se ha integrado **JaCoCo (Java Code Coverage)** para generar reportes de cobertura de código de forma automática durante la ejecución de las pruebas.
-
-### Ejecutar pruebas
-
-Para ejecutar las pruebas:
+### Construir imagen
 
 ```bash
-mvn test
+docker build -t grades-api .
 ```
 
-### Generar reporte de cobertura con JaCoCo
+### Correr contenedor
 
-El reporte HTML de JaCoco se genera automáticamente al ejecutar los tests con Maven.  Para visualizarlo:
-
-1. Ejecuta
+```bash
+docker run -d \
+  -p 8084:8084 \
+  -e DB_ENDPOINT=tu-endpoint.mysql.amazonaws.com \
+  -e DB_PORT=3306 \
+  -e DB_NAME=nombre_base_datos \
+  -e DB_USERNAME=usuario \
+  -e DB_PASSWORD=contraseña \
+  -e API_USER_URL=http://localhost:8081 \
+  --name grades-api \
+  grades-api
 
 ```
-mvn clean verify
+
+**Recomendación**: Usa docker compose para una experiencia más sencilla y consistente que se incluye dentro de este repositorio y se encuentra configurado para que pueda obtener las variables de entorno directamente del archivo `.env` que no se incluye en el repositorio (pero se ha documentado acá previamente). Que si bien no es obligatorio, es altamente recomendable para facilitar la configuración y despliegue del microservicio.
+
+---
+
+## Recomendaciones
+
+- Configura correctamente el archivo `application.properties` para la base de datos y URL del microservicio de usuarios.
+
+Ejemplo de configuración:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/grades_db?useSSL=false&serverTimezone=UTC
+spring.datasource.username=usuario
+spring.datasource.password=contraseña
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+users.api.url=http://localhost:8084
 ```
 
-2. Abre el archivo generado en la ruta
+---
 
-```
-target/site/jacoco/index.html
-```
+## Autores
 
-## Autor
-
-Desarrollado por **Leonel Briones Palacios**.
-
-## Licencia
-
-Este proyecto está licenciado bajo la [MIT License](LICENSE).
+**Nombre:** Leonel Briones / Jaime Loff
